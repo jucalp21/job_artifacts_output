@@ -20,6 +20,20 @@ jobs:
         run: npm run lint
       - name: Test code
         run: npm run test
+  sonar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v3
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v2.1.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: .
+          args: >
+            -Dsonar.projectKey=${{ github.repository }}-${{ github.ref_name }}
+            -DSonar.host.url=${{ secrets.SONAR_HOST }}
   build:
     needs: test
     runs-on: ubuntu-latest
